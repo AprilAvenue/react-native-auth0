@@ -67,6 +67,40 @@ export default class Users {
         })
       );
   }
+  
+   /**
+   * Link to accounts
+   *
+   * @param {String} parameters.link_with JWT for the secondary account being linked.
+   * @param {String} parameters.id identifier of the user to obtain
+   * @returns {Promise}
+   * @see https://auth0.com/docs/api/management/v2#!/Users/post_identities
+   *
+   * @memberof Users
+   */
+  linkAccounts(parameters = {}) {
+    const payload = apply(
+      {
+        parameters: {
+          id: { required: true },
+          link_with: { required: true }
+        }
+      },
+      parameters
+    );
+    return this.client
+      .post(`/api/v2/users/${encodeURIComponent(payload.id)}/identities`,
+           {
+       link_with: payload.link_with
+      })
+      .then(response =>
+        responseHandler(response, {
+          attributes,
+          whitelist: true,
+          rootOnly: true
+        })
+      );
+  }
 
   /**
    * Patch a user's `user_metadata`
